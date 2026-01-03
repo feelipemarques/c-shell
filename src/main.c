@@ -30,6 +30,11 @@ int cmd_clear(char *input){
     return 1;
 }
 
+int cmd_echo(char *input){
+    printf("%s\n", input);
+    return 1;
+}
+
 
 int main(){
     
@@ -37,7 +42,8 @@ int main(){
         {"exit", cmd_exit},
         {"help", cmd_help},
         {"version", cmd_version},
-        {"clear", cmd_clear}
+        {"clear", cmd_clear},
+        {"echo", cmd_echo}
     };
 
     int found = 0;
@@ -50,10 +56,23 @@ int main(){
         
         input[strcspn(input, "\n")] = '\0';
 
+        char *ptr = strchr(input, ' ');
+        char *command_name;
+        char *args;
+
+        if(ptr == NULL){
+            command_name = input;
+            args = NULL;
+        }else{
+            *ptr = '\0';
+            command_name = input;
+            args = ptr + 1;
+        }  
+
         for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
-            if(strcmp(input, commands[i].name) == 0){
+            if(strcmp(command_name, commands[i].name) == 0){
                 found++;
-                running = commands[i].action(input);
+                running = commands[i].action(args);
             }
         }
 
