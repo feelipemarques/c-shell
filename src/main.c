@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct command{
@@ -15,11 +16,17 @@ int cmd_help(char *input){
     printf("HELP        shows the command list\n");
     printf("EXIT        closes the shell\n");
     printf("VERSION     shows the C-SHELL's current version\n");
+    printf("CLEAR       clears the terminal\n");
     return 1;
 }
 
 int cmd_version(char *input){
     printf("C-Shell v0.1.0\n\n");
+    return 1;
+}
+
+int cmd_clear(char *input){
+    system("clear");
     return 1;
 }
 
@@ -29,7 +36,8 @@ int main(){
     Commands commands[] = {
         {"exit", cmd_exit},
         {"help", cmd_help},
-        {"version", cmd_version}
+        {"version", cmd_version},
+        {"clear", cmd_clear}
     };
 
     int found = 0;
