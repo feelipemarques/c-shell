@@ -21,6 +21,7 @@ int cmd_help(char *input){
     printf("CLEAR       clears the terminal\n");
     printf("CD          changes the directory\n");
     printf("PWD         shows current directory\n");
+    printf("LS          lists the current directory's content\n");
     return 1;
 }
 
