@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <dirent.h>
 
 typedef struct command{
     char name[16];
@@ -39,7 +40,6 @@ int cmd_echo(char *input){
 }
 
 int cmd_cd(char *input){
-    printf("%s\n", input);
     if(input == NULL){
         printf("cd: missing argument\n");
         return 1;
@@ -56,6 +56,28 @@ int cmd_pwd(char *input){
     return 1;
 }
 
+int cmd_ls(char *input){
+    DIR *dir;
+    struct dirent *entry;
+
+    if(input == NULL){
+        dir = opendir(".");
+    }else{
+        dir = opendir(input);
+    }
+
+    if(dir == NULL){
+        printf("ls: cannot open directory\n");
+    }
+
+    while((entry = readdir(dir)) != NULL){
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dir);
+    return 1;
+}
+
 int main(){
     
     Commands commands[] = {
@@ -65,7 +87,8 @@ int main(){
         {"clear", cmd_clear},
         {"echo", cmd_echo},
         {"pwd", cmd_pwd},
-        {"cd", cmd_cd}
+        {"cd", cmd_cd},
+        {"ls", cmd_ls}
     };
 
     int found = 0;
