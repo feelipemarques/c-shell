@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 typedef struct command{
     char name[16];
@@ -17,11 +18,13 @@ int cmd_help(char *input){
     printf("EXIT        closes the shell\n");
     printf("VERSION     shows the C-SHELL's current version\n");
     printf("CLEAR       clears the terminal\n");
+    printf("CD          changes the directory\n");
+    printf("PWD         shows current directory\n");
     return 1;
 }
 
 int cmd_version(char *input){
-    printf("C-Shell v0.1.0\n\n");
+    printf("C-Shell v0.1.0\n");
     return 1;
 }
 
@@ -30,6 +33,28 @@ int cmd_clear(char *input){
     return 1;
 }
 
+int cmd_echo(char *input){
+    printf("%s\n", input);
+    return 1;
+}
+
+int cmd_cd(char *input){
+    printf("%s\n", input);
+    if(input == NULL){
+        printf("cd: missing argument\n");
+        return 1;
+    }
+    if(chdir(input) != 0){
+        printf("cd: an error ocurred! try again!\n");
+    }
+    return 1;
+}
+
+int cmd_pwd(char *input){
+    char buffer[1024];
+    printf("%s\n", getcwd(buffer, 1024));
+    return 1;
+}
 
 int main(){
     
@@ -37,7 +62,10 @@ int main(){
         {"exit", cmd_exit},
         {"help", cmd_help},
         {"version", cmd_version},
-        {"clear", cmd_clear}
+        {"clear", cmd_clear},
+        {"echo", cmd_echo},
+        {"pwd", cmd_pwd},
+        {"cd", cmd_cd}
     };
 
     int found = 0;
@@ -50,15 +78,28 @@ int main(){
         
         input[strcspn(input, "\n")] = '\0';
 
+        char *ptr = strchr(input, ' ');
+        char *command_name;
+        char *args;
+
+        if(ptr == NULL){
+            command_name = input;
+            args = NULL;
+        }else{
+            *ptr = '\0';
+            command_name = input;
+            args = ptr + 1;
+        }  
+
         for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
-            if(strcmp(input, commands[i].name) == 0){
+            if(strcmp(command_name, commands[i].name) == 0){
                 found++;
-                running = commands[i].action(input);
+                running = commands[i].action(args);
             }
         }
 
         if(found == 0){
-            printf("Command not found! Try 'help'!\n\n");
+            printf("Command not found! Try 'help'!\n");
         }
 
         found = 0;
