@@ -79,6 +79,15 @@ int cmd_ls(char *input){
     return 1;
 }
 
+int cmd_mkdir(char *input){
+    if(input == NULL){
+        printf("mkdir: dir name cannot be null\n");
+        return 1;
+    }
+    mkdir(input);
+    return 1;
+}
+
 int main(){
     
     Commands commands[] = {
@@ -89,7 +98,8 @@ int main(){
         {"echo", cmd_echo},
         {"pwd", cmd_pwd},
         {"cd", cmd_cd},
-        {"ls", cmd_ls}
+        {"ls", cmd_ls},
+        {"mkdir", cmd_mkdir}
     };
 
     int found = 0;
