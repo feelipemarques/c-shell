@@ -15,5 +15,6 @@ int cmd_cd(char *input);
 int cmd_pwd(char *input);
 int cmd_ls(char *input);
 int cmd_mkdir(char *input);
+int cmd_rmdir(char *input);
 
 #endif
