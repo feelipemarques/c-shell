@@ -1,11 +1,3 @@
-Great request — and nice reference README 👍
-I’ll **write a complete README for your C-Shell project**, inspired by that structure, **already using correct English prepositions**.
-After the README, I’ll briefly explain *why* the prepositions are correct so you can learn from it.
-
-You can copy-paste this directly into `README.md`.
-
----
-
 ## 📄 README — C-Shell
 
 ````md
