@@ -1,6 +1,4 @@
 ## 📄 README — C-Shell
-
-````md
 <!-- BACK TO TOP ANCHOR -->
 <a id="readme-top"></a>
 
@@ -71,7 +69,7 @@ Follow the steps below to build and run the shell locally.
 1. Clone the repository
    ```sh
    git clone https://github.com/your-username/c-shell.git
-````
+    ````
 
 2. Enter the project directory
 
@@ -128,13 +126,6 @@ The shell currently supports the following built-in commands:
 
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
 
-<!-- LICENSE -->
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-<p align="right"><a href="#readme-top">⬆ back to top</a></p>
 ```
 
 ---
