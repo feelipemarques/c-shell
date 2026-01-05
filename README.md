@@ -29,7 +29,6 @@
     </li>
     <li><a href="#available-commands">Available Commands</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
   </ol>
 </details>
 
@@ -77,16 +76,16 @@ Follow the steps below to build and run the shell locally.
    cd c-shell
    ```
 
-3. Compile the project
+3. Compile the project using the Makefile
 
    ```sh
-   gcc -o c-shell src/main.c
+   make
    ```
 
 4. Run the shell
 
    ```sh
-   ./c-shell
+   ./build/shell.exe
    ```
 
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
