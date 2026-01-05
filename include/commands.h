@@ -3,7 +3,7 @@
 
 typedef struct command {
     char name[16];
-    int (*action)(char *);
+    int (*action)(int argc, char **argv);
 } Commands;
 
 int cmd_exit(char *input);
