@@ -2,6 +2,9 @@
 #include "commands.h"
 
 int cmd_echo(int argc, char **argv){
-    printf("%s\n", argv[1]);
+    for(int i = 1; i < argc; i++){
+        printf("%s ", argv[i]);
+    }
+    printf("\n");
     return 1;
 }
