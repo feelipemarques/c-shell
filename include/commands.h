@@ -6,15 +6,15 @@ typedef struct command {
     int (*action)(int argc, char **argv);
 } Commands;
 
-int cmd_exit(char *input);
-int cmd_help(char *input);
-int cmd_version(char *input);
-int cmd_clear(char *input);
-int cmd_echo(char *input);
-int cmd_cd(char *input);
-int cmd_pwd(char *input);
-int cmd_ls(char *input);
-int cmd_mkdir(char *input);
-int cmd_rmdir(char *input);
+int cmd_exit(int argc, char **argv);
+int cmd_help(int argc, char **argv);
+int cmd_version(int argc, char **argv);
+int cmd_clear(int argc, char **argv);
+int cmd_echo(int argc, char **argv);
+int cmd_cd(int argc, char **argv);
+int cmd_pwd(int argc, char **argv);
+int cmd_ls(int argc, char **argv);
+int cmd_mkdir(int argc, char **argv);
+int cmd_rmdir(int argc, char **argv);
 
 #endif

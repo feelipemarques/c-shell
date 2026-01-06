@@ -2,14 +2,14 @@
 #include <dirent.h>
 #include "commands.h"
 
-int cmd_ls(char *input){
+int cmd_ls(int argc, char **argv){
     DIR *dir;
     struct dirent *entry;
 
-    if(input == NULL){
+    if(argv[1] == NULL){
         dir = opendir(".");
     }else{
-        dir = opendir(input);
+        dir = opendir(argv[0]);
     }
 
     if(dir == NULL){

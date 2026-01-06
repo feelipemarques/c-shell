@@ -2,11 +2,11 @@
 #include <unistd.h>
 #include "commands.h"
 
-int cmd_rmdir(char *input){
-    if(input == NULL){
+int cmd_rmdir(int argc, char **argv){
+    if(argv[1] == NULL){
         printf("rmdir: missing operand");
         return 1;
     }
-    rmdir(input);
+    rmdir(argv[1]);
     return 1;
 }

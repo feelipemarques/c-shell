@@ -28,25 +28,32 @@ int main(){
         printf("myshell> ");
         fgets(input, sizeof(input), stdin);
         
-        input[strcspn(input, "\n")] = '\0';
+        input[strcspn(input, "\n")] = '\0'; // Transforma o '\n' (quebra de linha) em um '\0'
 
-        char *ptr = strchr(input, ' ');
-        char *command_name;
-        char *args;
+        char *argv[10];
+        int argc = 0;
+        char *start = input;
+        char *p = input;
 
-        if(ptr == NULL){
-            command_name = input;
-            args = NULL;
-        }else{
-            *ptr = '\0';
-            command_name = input;
-            args = ptr + 1;
-        }  
+        while(*p != '\0' && argc < 10){
+            if(*p == ' '){
+                *p = '\0';
+                argv[argc++] = start;
+                start = p + 1;
+            }
+            p++; 
+        }
+
+        if (*start != '\0' && argc < 9) {
+            argv[argc++] = start;
+        }
+
+        argv[argc] = NULL;
 
         for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
-            if(strcmp(command_name, commands[i].name) == 0){
+            if(strcmp(argv[0], commands[i].name) == 0){
                 found++;
-                running = commands[i].action(args);
+                running = commands[i].action(argc, argv);
             }
         }
 

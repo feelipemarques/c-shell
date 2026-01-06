@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "commands.h"
 
-int cmd_help(char *input){
+int cmd_help(int argc, char **argv){
     printf("Command list:\n");
     printf("HELP        shows the command list\n");
     printf("EXIT        closes the shell\n");

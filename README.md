@@ -126,5 +126,3 @@ The shell currently supports the following built-in commands:
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
 
 ```
-
----

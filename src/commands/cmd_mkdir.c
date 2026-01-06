@@ -1,11 +1,12 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "commands.h"
 
-int cmd_mkdir(char *input){
-    if(input == NULL){
+int cmd_mkdir(int argc, char **argv){
+    if(argv[1] == NULL){
         printf("mkdir: dir name cannot be null\n");
         return 1;
     }
-    mkdir(input);
+    mkdir(argv[1]);
     return 1;
 }
