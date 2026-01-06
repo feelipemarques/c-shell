@@ -18,7 +18,9 @@ int main(){
         {"ls", cmd_ls},
         {"mkdir", cmd_mkdir},
         {"rmdir", cmd_rmdir},
-        {"cp", cmd_cp}
+        {"cp", cmd_cp},
+        {"touch", cmd_touch},
+        {"cat", cmd_cat}
     };
 
     int found = 0;
@@ -26,7 +28,7 @@ int main(){
 
     while(running){
         char input[1024];
-        printf("myshell> ");
+        printf("myshell> $ ");
         fgets(input, sizeof(input), stdin);
         
         input[strcspn(input, "\n")] = '\0'; // Transforma o '\n' (quebra de linha) em um '\0'
@@ -51,15 +53,20 @@ int main(){
 
         argv[argc] = NULL;
 
+        if(argc == 0){
+            continue;
+        }
+
         for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
             if(strcmp(argv[0], commands[i].name) == 0){
-                found++;
+                found = 1;
                 running = commands[i].action(argc, argv);
+                break;
             }
         }
 
         if(found == 0){
-            printf("Command not found! Try 'help'!\n");
+            printf("myshell: command not found! Try 'help'!\n");
         }
 
         found = 0;
