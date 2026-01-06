@@ -117,7 +117,7 @@ The shell currently supports the following built-in commands:
 * [x] Command dispatch using function pointers
 * [x] Argument parsing
 * [x] Built-in commands
-* [ ] Refactor command interface to use `argc` / `argv`
+* [x] Refactor command interface to use `argc` / `argv`
 * [ ] Execute external programs
 * [ ] Input/output redirection
 * [ ] Pipes (`|`)
