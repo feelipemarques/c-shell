@@ -17,7 +17,8 @@ int main(){
         {"cd", cmd_cd},
         {"ls", cmd_ls},
         {"mkdir", cmd_mkdir},
-        {"rmdir", cmd_rmdir}
+        {"rmdir", cmd_rmdir},
+        {"cp", cmd_cp}
     };
 
     int found = 0;

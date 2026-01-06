@@ -16,5 +16,6 @@ int cmd_pwd(int argc, char **argv);
 int cmd_ls(int argc, char **argv);
 int cmd_mkdir(int argc, char **argv);
 int cmd_rmdir(int argc, char **argv);
+int cmd_cp(int argc, char **argv);
 
 #endif
