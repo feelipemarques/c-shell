@@ -34,7 +34,6 @@ int main(){
         {"rm", cmd_rm}
     };
 
-    int found = 0;
     int running = 1;
 
     while(running){
@@ -72,31 +71,28 @@ int main(){
             continue;
         }
 
-        for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
-            if(strcmp(argv[0], commands[i].name) == 0){
-                found = 1;
-                running = commands[i].action(argc, argv);
-                break;
-            }
+        pid_t pid = fork();
+        
+        if(pid < 0){
+            perror("fork");
+            exit(1);
         }
-
-        if(found == 0){
-            pid_t pid = fork();
-            if(pid < 0){
-                perror("fork");
+        if(pid == 0){
+            for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
+                if(strcmp(argv[0], commands[i].name) == 0){
+                    //Aplicar redirect aqui usando dup2
+                    running = commands[i].action(argc, argv);
+                    exit(0);
+                }
             }
-            if(pid == 0){
-                execvp(argv[0], argv);
-                perror("exec");
-                exit(1);
-            }
-            else{
-                waitpid(pid, NULL, 0);
-            }
-            
+            //Aplicar redirect aqui usando dup2
+            execvp(argv[0], argv);
+            perror("exec");
+            exit(1);
         }
-
-        found = 0;
+        else{
+            waitpid(pid, NULL, 0);
+        }
     }
 }
 
