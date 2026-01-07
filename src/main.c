@@ -20,7 +20,8 @@ int main(){
         {"rmdir", cmd_rmdir},
         {"cp", cmd_cp},
         {"touch", cmd_touch},
-        {"cat", cmd_cat}
+        {"cat", cmd_cat},
+        {"rm", cmd_rm}
     };
 
     int found = 0;

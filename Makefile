@@ -1,4 +1,4 @@
 all: compile
 
 compile:
-	gcc src/main.c src/commands/*.c -Iinclude -Wall -o build/shell.exe
+	gcc -g src/main.c src/commands/*.c -Iinclude -Wall -o build/shell.exe
