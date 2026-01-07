@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <dirent.h>
+#include <fcntl.h>
 #include "../include/commands.h"
 #include "../include/operators.h"
 
@@ -78,15 +79,25 @@ int main(){
             exit(1);
         }
         if(pid == 0){
+            int std_fd;
+            if(redirect.type == REDIRECT_IN){
+                std_fd = STDIN_FILENO;
+            }else if(redirect.type == REDIRECT_OUT){
+                std_fd = STDOUT_FILENO;
+            }
             for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
                 if(strcmp(argv[0], commands[i].name) == 0){
-                    //Aplicar redirect aqui usando dup2
+                    int fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                    dup2(fd, std_fd);
                     running = commands[i].action(argc, argv);
+                    close(fd);
                     exit(0);
                 }
             }
-            //Aplicar redirect aqui usando dup2
+            int fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            dup2(fd, std_fd);
             execvp(argv[0], argv);
+            close(fd);
             perror("exec");
             exit(1);
         }
