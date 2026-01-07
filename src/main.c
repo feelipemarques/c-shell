@@ -5,6 +5,11 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include "../include/commands.h"
+#include "../include/operators.h"
+
+
+int is_operator(const char *token);
+int validate_operators(int argc, char **argv);
 
 int main(){
     
@@ -27,6 +32,7 @@ int main(){
 
     int found = 0;
     int running = 1;
+    int operators = 0;
 
     while(running){
         char input[1024];
@@ -54,6 +60,10 @@ int main(){
         }
 
         argv[argc] = NULL;
+        
+        if(!validate_operators(argc, argv)){
+            continue;
+        }
 
         if(argc == 0){
             continue;
@@ -85,4 +95,29 @@ int main(){
 
         found = 0;
     }
+}
+
+int is_operator(const char *token){
+    for(int i = 0; OPERATORS[i] != NULL; i++){
+        if(strcmp(token, OPERATORS[i]) == 0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int validate_operators(int argc, char **argv){
+    int operators = 0;
+
+    for(int i = 0; i < argc; i++){
+        if(is_operator(argv[i]) == 1){
+            if(i == 0 || i == (argc - 1) || operators > 0){
+                printf("Syntax error!");
+                return 0;
+            }
+            operators = 1;
+        
+        }
+    }
+    return 1;
 }
