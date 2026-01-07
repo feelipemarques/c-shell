@@ -79,23 +79,22 @@ int main(){
             exit(1);
         }
         if(pid == 0){
-            int std_fd;
+            int fd = -1;
             if(redirect.type == REDIRECT_IN){
-                std_fd = STDIN_FILENO;
+                fd = open(redirect.filename, O_RDONLY);
+                dup2(fd, STDIN_FILENO);
+                close(fd);
             }else if(redirect.type == REDIRECT_OUT){
-                std_fd = STDOUT_FILENO;
+                fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                dup2(fd, STDOUT_FILENO);
+                close(fd);
             }
             for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
                 if(strcmp(argv[0], commands[i].name) == 0){
-                    int fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                    dup2(fd, std_fd);
                     running = commands[i].action(argc, argv);
-                    close(fd);
                     exit(0);
                 }
             }
-            int fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            dup2(fd, std_fd);
             execvp(argv[0], argv);
             close(fd);
             perror("exec");
