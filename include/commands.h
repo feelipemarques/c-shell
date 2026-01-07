@@ -6,6 +6,17 @@ typedef struct command {
     int (*action)(int argc, char **argv);
 } Commands;
 
+typedef enum {
+    REDIRECT_NONE,
+    REDIRECT_IN,
+    REDIRECT_OUT
+} RedirectType;
+
+typedef struct operator {
+    RedirectType type;
+    char *filename;
+} RedirectInfo;
+
 int cmd_exit(int argc, char **argv);
 int cmd_help(int argc, char **argv);
 int cmd_version(int argc, char **argv);

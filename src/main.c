@@ -9,9 +9,13 @@
 
 
 int is_operator(const char *token);
-int validate_operators(int argc, char **argv);
+int validate_operators(int *argc, char **argv, RedirectInfo *redirect);
 
 int main(){
+
+    RedirectInfo redirect;
+    redirect.type = REDIRECT_NONE;
+    redirect.filename = NULL;
     
     Commands commands[] = {
         {"exit", cmd_exit},
@@ -32,7 +36,6 @@ int main(){
 
     int found = 0;
     int running = 1;
-    int operators = 0;
 
     while(running){
         char input[1024];
@@ -61,7 +64,7 @@ int main(){
 
         argv[argc] = NULL;
         
-        if(!validate_operators(argc, argv)){
+        if(!validate_operators(&argc, argv, &redirect)){
             continue;
         }
 
@@ -106,18 +109,40 @@ int is_operator(const char *token){
     return 0;
 }
 
-int validate_operators(int argc, char **argv){
-    int operators = 0;
+int validate_operators(int *argc, char **argv, RedirectInfo *redirect){
+    int operator_index = -1;
 
-    for(int i = 0; i < argc; i++){
+    for(int i = 0; i < *argc; i++){
         if(is_operator(argv[i]) == 1){
-            if(i == 0 || i == (argc - 1) || operators > 0){
+            if(i == 0 || i == (*argc - 1) || operator_index != -1){
                 printf("Syntax error!");
                 return 0;
             }
-            operators = 1;
-        
+            operator_index = i;
+
+            if(strcmp(argv[i], ">") == 0){
+                redirect->type = REDIRECT_OUT;
+            } else if(strcmp(argv[i], "<") == 0){
+                redirect->type = REDIRECT_IN;
+            }
+
+            redirect->filename = argv[i + 1];
+            break;
         }
     }
+
+    if(operator_index == -1){
+        redirect->type = REDIRECT_NONE;
+        redirect->filename = NULL;
+        return 1;
+    }
+
+    for(int j = operator_index; j < *argc -2; j++){
+        argv[j] = argv[j + 2];
+    }
+
+    *argc -= 2;
+    argv[*argc] = NULL;
+
     return 1;
 }
