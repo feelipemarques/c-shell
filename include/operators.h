@@ -3,6 +3,8 @@
 #define OPERATORS_H
 
 static const char *OPERATORS[] = {
+    ">>",
+    "<<",
     ">",
     "<",
     "|",

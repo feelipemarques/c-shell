@@ -9,12 +9,16 @@ typedef struct command {
 typedef enum {
     REDIRECT_NONE,
     REDIRECT_IN,
-    REDIRECT_OUT
+    REDIRECT_OUT,
+    REDIRECT_APPEND,
+    REDIRECT_HEREDOC
 } RedirectType;
 
 typedef struct operator {
     RedirectType type;
     char *filename;
+    char *heredoc_text;
+    char *heredoc_find;
 } RedirectInfo;
 
 int cmd_exit(int argc, char **argv);
