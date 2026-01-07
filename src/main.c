@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <dirent.h>
 #include "../include/commands.h"
 
@@ -67,7 +68,19 @@ int main(){
         }
 
         if(found == 0){
-            printf("myshell: command not found! Try 'help'!\n");
+            pid_t pid = fork();
+            if(pid < 0){
+                perror("fork");
+            }
+            if(pid == 0){
+                execvp(argv[0], argv);
+                perror("exec");
+                exit(1);
+            }
+            else{
+                waitpid(pid, NULL, 0);
+            }
+            
         }
 
         found = 0;
