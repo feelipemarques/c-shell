@@ -7,7 +7,6 @@ static const char *OPERATORS[] = {
     "<<",
     ">",
     "<",
-    "|",
     NULL
 };
 

@@ -21,6 +21,11 @@ typedef struct operator {
     char *heredoc_find;
 } RedirectInfo;
 
+typedef struct {
+    int start;
+    int end;
+} CommandRange;
+
 int cmd_exit(int argc, char **argv);
 int cmd_help(int argc, char **argv);
 int cmd_version(int argc, char **argv);
