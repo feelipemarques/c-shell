@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include "../include/commands.h"
 #include "../include/operators.h"
+#include "executor.c"
 
 
 int is_operator(const char *token);
@@ -18,14 +19,17 @@ int main(){
     redirect.type = REDIRECT_NONE;
     redirect.filename = NULL;
     
-    Commands commands[] = {
+    Commands parent_commands[] = {
         {"exit", cmd_exit},
+        {"cd", cmd_cd}
+    };
+
+    Commands child_commands[] = {
         {"help", cmd_help},
         {"version", cmd_version},
         {"clear", cmd_clear},
         {"echo", cmd_echo},
         {"pwd", cmd_pwd},
-        {"cd", cmd_cd},
         {"ls", cmd_ls},
         {"mkdir", cmd_mkdir},
         {"rmdir", cmd_rmdir},
@@ -34,6 +38,8 @@ int main(){
         {"cat", cmd_cat},
         {"rm", cmd_rm}
     };
+
+    int commands_len = sizeof(child_commands) / sizeof(child_commands[0]);
 
     int running = 1;
 
@@ -72,6 +78,13 @@ int main(){
             continue;
         }
 
+        for(int i = 0; i < sizeof(parent_commands) / sizeof(parent_commands[0]); i++){
+            if(strcmp(argv[0], parent_commands[i].name) == 0){
+                running = parent_commands[i].action(argc, argv);
+                exit(0);
+            }
+        }
+
         pid_t pid = fork();
         
         if(pid < 0){
@@ -79,56 +92,7 @@ int main(){
             exit(1);
         }
         if(pid == 0){
-            int fd = -1;
-            if(redirect.type == REDIRECT_IN){
-                fd = open(redirect.filename, O_RDONLY);
-                dup2(fd, STDIN_FILENO);
-                close(fd);
-            }else if(redirect.type == REDIRECT_OUT){
-                fd = open(redirect.filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                dup2(fd, STDOUT_FILENO);
-                close(fd);
-            }else if(redirect.type == REDIRECT_APPEND){
-                fd = open(redirect.filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-                dup2(fd, STDOUT_FILENO);
-                close(fd);
-            }else if(redirect.type == REDIRECT_HEREDOC){
-                int pipefd[2];
-                pipe(pipefd);
-
-                char *line = NULL;
-                size_t len = 0;
-                ssize_t read_bytes;
-
-                while(1){
-                    printf("> ");
-                    read_bytes = getline(&line, &len, stdin);
-                    if(read_bytes <= 0) break;
-                    line[read_bytes - 1] = '\0';
-
-                    if(strcmp(line, redirect.heredoc_find) == 0){
-                        break;
-                    }
-
-                    write(pipefd[1], line, strlen(line));
-                    write(pipefd[1], "\n", 1);
-                }
-                free(line);
-
-                close(pipefd[1]);
-                dup2(pipefd[0], STDIN_FILENO);
-                close(pipefd[0]);
-            }
-            for(int i = 0; i < sizeof(commands)/sizeof(commands[0]); i++){
-                if(strcmp(argv[0], commands[i].name) == 0){
-                    running = commands[i].action(argc, argv);
-                    exit(0);
-                }
-            }
-            execvp(argv[0], argv);
-            close(fd);
-            perror("exec");
-            exit(1);
+            execute_command(argc, argv, redirect, child_commands, commands_len);
         }
         else{
             waitpid(pid, NULL, 0);
