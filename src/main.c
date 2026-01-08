@@ -77,12 +77,18 @@ int main(){
         if(argc == 0){
             continue;
         }
+        
+        int handled_by_parent = 0;
 
         for(int i = 0; i < sizeof(parent_commands) / sizeof(parent_commands[0]); i++){
             if(strcmp(argv[0], parent_commands[i].name) == 0){
                 running = parent_commands[i].action(argc, argv);
-                exit(0);
+                handled_by_parent = 1;
+                break;
             }
+        }
+        if(handled_by_parent){
+            continue;
         }
 
         pid_t pid = fork();
