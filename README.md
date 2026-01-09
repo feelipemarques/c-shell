@@ -120,7 +120,7 @@ The shell currently supports the following built-in commands:
 * [x] Refactor command interface to use `argc` / `argv`
 * [x] Execute external programs
 * [x] Input/output redirection
-* [ ] Pipes (`|`)
+* [x] Pipes (`|`)
 * [ ] Command history
 
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
