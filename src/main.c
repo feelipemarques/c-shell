@@ -10,6 +10,7 @@
 #include "executor.c"
 #include "operator.c"
 #include "pipe.c"
+#include "parser.c"
 
 int main(){
 
@@ -46,26 +47,11 @@ int main(){
         char input[1024];
         printf("myshell> $ ");
         fgets(input, sizeof(input), stdin);
-        
-        input[strcspn(input, "\n")] = '\0'; // Transforma o '\n' (quebra de linha) em um '\0'
 
         char *argv[10];
         int argc = 0;
-        char *start = input;
-        char *p = input;
-
-        while(*p != '\0' && argc < 10){
-            if(*p == ' '){
-                *p = '\0';
-                argv[argc++] = start;
-                start = p + 1;
-            }
-            p++; 
-        }
-
-        if (*start != '\0' && argc < 9) { argv[argc++] = start; }
-
-        argv[argc] = NULL;
+        
+        parse_input(input, &argc, argv);
 
         if(!validate_pipe(&argc, argv, ranges, &num_cmds)){ continue; }
         
