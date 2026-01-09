@@ -69,15 +69,28 @@ int main(){
 
         if(!validate_pipe(&argc, argv, ranges, &num_cmds)){ continue; }
         
+        char *cmd_argv[10];
+
         for(int i = 0; i < num_cmds; i++){
-            if(!validate_operators(&argc, argv, &redirect)){ continue; }
+
+            int start = ranges[i].start;
+            int end   = ranges[i].end;
+            int cmd_argc = 0;
+
+            for (int j = start; j <= end; j++) {
+                cmd_argv[cmd_argc++] = argv[j];
+            }
+
+            cmd_argv[cmd_argc] = NULL;
+
+            if(!validate_operators(&cmd_argc, cmd_argv, &redirect)){ continue; }
             if(argc == 0){ continue; }
 
             int handled_by_parent = 0;
 
             for(int i = 0; i < sizeof(parent_commands) / sizeof(parent_commands[0]); i++){
-                if(strcmp(argv[0], parent_commands[i].name) == 0){
-                    running = parent_commands[i].action(argc, argv);
+                if(strcmp(cmd_argv[0], parent_commands[i].name) == 0){
+                    running = parent_commands[i].action(cmd_argc, cmd_argv);
                     handled_by_parent = 1;
                     break;
                 }
@@ -90,9 +103,8 @@ int main(){
                 perror("fork");
                 exit(1);
             }
-            if(pid == 0){ execute_command(argc, argv, redirect, child_commands, commands_len); }
+            if(pid == 0){ execute_command(cmd_argc, cmd_argv, redirect, child_commands, commands_len); }
             else{ waitpid(pid, NULL, 0); }
         }
     }
 }
-

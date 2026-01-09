@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "./include/commands.h"
+#include <string.h>
+#include "../include/commands.h"
 
 int validate_pipe(int *argc, char **argv, CommandRange *ranges, int *num_cmds){
     *num_cmds = 0;
@@ -10,14 +11,14 @@ int validate_pipe(int *argc, char **argv, CommandRange *ranges, int *num_cmds){
             return 0;
         }
         if(strcmp(argv[i], "|") == 0){
-            if(i == 0 || i == (*argc - 1) || (i - 1) == "|"){
+            if(i == 0 || i == (*argc - 1) || strcmp(argv[(i - 1)], "|") == 0){
                 printf("Syntax error!\n");
                 return 0;
             }else{
                 ranges[*num_cmds].start = start;
                 ranges[*num_cmds].end = i - 1;
                 start = i + 1;
-                *num_cmds++;
+                (*num_cmds)++;
                 continue;
             }
         }
