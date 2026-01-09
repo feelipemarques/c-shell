@@ -9,6 +9,7 @@
 #include "../include/operators.h"
 #include "executor.c"
 #include "operator.c"
+#include "pipe.c"
 
 int main(){
 
@@ -36,8 +37,8 @@ int main(){
         {"rm", cmd_rm}
     };
 
-    CommandRange range[] = {};
-
+    CommandRange ranges[10];
+    int num_cmds = 0;
     int commands_len = sizeof(child_commands) / sizeof(child_commands[0]);
     int running = 1;
 
@@ -62,46 +63,35 @@ int main(){
             p++; 
         }
 
-        if (*start != '\0' && argc < 9) {
-            argv[argc++] = start;
-        }
+        if (*start != '\0' && argc < 9) { argv[argc++] = start; }
 
         argv[argc] = NULL;
 
-
-
-        if(!validate_operators(&argc, argv, &redirect)){
-            continue;
-        }
-
-        if(argc == 0){
-            continue;
-        }
-
-        int handled_by_parent = 0;
-
-        for(int i = 0; i < sizeof(parent_commands) / sizeof(parent_commands[0]); i++){
-            if(strcmp(argv[0], parent_commands[i].name) == 0){
-                running = parent_commands[i].action(argc, argv);
-                handled_by_parent = 1;
-                break;
-            }
-        }
-        if(handled_by_parent){
-            continue;
-        }
-
-        pid_t pid = fork();
+        if(!validate_pipe(&argc, argv, ranges, &num_cmds)){ continue; }
         
-        if(pid < 0){
-            perror("fork");
-            exit(1);
-        }
-        if(pid == 0){
-            execute_command(argc, argv, redirect, child_commands, commands_len);
-        }
-        else{
-            waitpid(pid, NULL, 0);
+        for(int i = 0; i < num_cmds; i++){
+            if(!validate_operators(&argc, argv, &redirect)){ continue; }
+            if(argc == 0){ continue; }
+
+            int handled_by_parent = 0;
+
+            for(int i = 0; i < sizeof(parent_commands) / sizeof(parent_commands[0]); i++){
+                if(strcmp(argv[0], parent_commands[i].name) == 0){
+                    running = parent_commands[i].action(argc, argv);
+                    handled_by_parent = 1;
+                    break;
+                }
+            }
+            if(handled_by_parent){ continue; }
+
+            pid_t pid = fork();
+            
+            if(pid < 0){
+                perror("fork");
+                exit(1);
+            }
+            if(pid == 0){ execute_command(argc, argv, redirect, child_commands, commands_len); }
+            else{ waitpid(pid, NULL, 0); }
         }
     }
 }
