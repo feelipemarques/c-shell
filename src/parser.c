@@ -7,9 +7,11 @@ void parse_input(char *input, int *argc, char **argv){
     char *p = input;
 
     while(*p != '\0' && *argc < 10){
-        if(*p == ' '){
+        if (*p == ' ') {
             *p = '\0';
-            argv[(*argc)++] = start;
+            if (*start != '\0') {
+                argv[(*argc)++] = start;
+            }
             start = p + 1;
         }
         p++; 
@@ -17,5 +19,5 @@ void parse_input(char *input, int *argc, char **argv){
 
     if (*start != '\0' && *argc < 9) { argv[(*argc)++] = start; }
 
-    *argv[*argc] = NULL;
+    argv[*argc] = NULL;
 }
