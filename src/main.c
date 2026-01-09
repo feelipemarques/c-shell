@@ -5,6 +5,8 @@
 #include <sys/wait.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "../include/commands.h"
 #include "../include/operators.h"
 
@@ -40,15 +42,20 @@ int main(){
     int running = 1;
 
     while(running){
-        printf("myshell> $ ");
-
-        char input[1024];
+        char *input = readline("myshell> $ ");
         char *argv[10];
         int argc = 0;
         char *cmd_argv[10];
 
-        fgets(input, sizeof(input), stdin);
-        
+        if (input == NULL) {
+            printf("\n");
+            break;
+        }
+        if (*input == '\0') {
+            free(input);
+            continue;
+        }   
+        add_history(input);
         parse_input(input, &argc, argv);
 
         if(!validate_pipe(&argc, argv, ranges, &num_cmds)){ continue; }
@@ -114,5 +121,6 @@ int main(){
             close(pipes[i][1]);
         }
         for (int i = 0; i < num_cmds; i++) { wait(NULL); }
+        free(input);
     }
 }
