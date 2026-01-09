@@ -1,4 +1,9 @@
-all: compile
+CC = gcc
+CFLAGS = -g -Wall -Iinclude
 
-compile:
-	gcc -g src/main.c src/commands/*.c -Iinclude -Wall -o build/shell.exe
+SRC = src/main.c \
+      src/core/*.c \
+      src/commands/*.c
+
+all:
+	$(CC) $(CFLAGS) $(SRC) -o build/shell.exe

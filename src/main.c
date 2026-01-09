@@ -7,10 +7,6 @@
 #include <fcntl.h>
 #include "../include/commands.h"
 #include "../include/operators.h"
-#include "executor.c"
-#include "operator.c"
-#include "pipe.c"
-#include "parser.c"
 
 int main(){
 

@@ -1,7 +1,9 @@
 #include <stdio.h>
-#include "../include/commands.h"
+#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "../include/commands.h"
 
 void execute_command(int argc, char **argv, RedirectInfo redirect, Commands *commands, int commands_len){
 

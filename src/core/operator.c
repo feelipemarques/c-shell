@@ -1,6 +1,16 @@
 #include <stdio.h>
+#include <string.h>
 #include "../include/commands.h"
 #include "../include/operators.h"
+
+const char *OPERATORS[] = {
+    "<",
+    ">",
+    ">>",
+    "<<",
+    "|",
+    NULL
+};
 
 int is_operator(const char *token){
     for(int i = 0; OPERATORS[i] != NULL; i++){

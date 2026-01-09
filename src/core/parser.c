@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 void parse_input(char *input, int *argc, char **argv){
     input[strcspn(input, "\n")] = '\0'; // Transforma o '\n' (quebra de linha) em um '\0'

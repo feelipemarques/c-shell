@@ -2,12 +2,6 @@
 #ifndef OPERATORS_H
 #define OPERATORS_H
 
-static const char *OPERATORS[] = {
-    ">>",
-    "<<",
-    ">",
-    "<",
-    NULL
-};
+extern const char *OPERATORS[];
 
 #endif

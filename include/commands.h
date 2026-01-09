@@ -40,5 +40,10 @@ int cmd_cp(int argc, char **argv);
 int cmd_cat(int argc, char **argv);
 int cmd_touch(int argc, char **argv);
 int cmd_rm(int argc, char **argv);
+void execute_command(int argc, char **argv, RedirectInfo redirect, Commands *commands, int commands_len);
+int is_operator(const char *token);
+int validate_operators(int *argc, char **argv, RedirectInfo *redirect);
+int validate_pipe(int *argc, char **argv, CommandRange *ranges, int *num_cmds);
+void parse_input(char *input, int *argc, char **argv);
 
 #endif
