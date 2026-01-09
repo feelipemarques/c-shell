@@ -1,7 +1,3 @@
-## 📄 README — C-Shell
-<!-- BACK TO TOP ANCHOR -->
-<a id="readme-top"></a>
-
 <!-- PROJECT HEADER -->
 <div align="center">
   <h3 align="center">C-Shell</h3>
@@ -106,6 +102,9 @@ The shell currently supports the following built-in commands:
 * `ls` – list files in the current directory
 * `mkdir [dir]` – create a directory
 * `rmdir [dir]` – remove a directory
+* `cp [src] [dest]` – copy files from source to destination
+* `cat [file]` – display file contents
+* `touch [file]` – create an empty file
 
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
 
@@ -121,6 +120,6 @@ The shell currently supports the following built-in commands:
 * [x] Execute external programs
 * [x] Input/output redirection
 * [x] Pipes (`|`)
-* [ ] Command history
+* [x] Command history
 
 <p align="right"><a href="#readme-top">⬆ back to top</a></p>
