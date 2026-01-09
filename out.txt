@@ -1,0 +1,12 @@
+.
+..
+.git
+.gitignore
+.vscode
+build
+include
+Makefile
+out.txt
+README.md
+src
+

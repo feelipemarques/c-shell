@@ -50,6 +50,15 @@ int main(){
         parse_input(input, &argc, argv);
 
         if(!validate_pipe(&argc, argv, ranges, &num_cmds)){ continue; }
+
+        int pipes[num_cmds - 1][2];
+
+        for(int i = 0; i < num_cmds - 1; i++){
+            if(pipe(pipes[i]) < 0){
+                perror("pipe");
+                continue;
+            }
+        }
         
         char *cmd_argv[10];
 
@@ -64,6 +73,9 @@ int main(){
             }
 
             cmd_argv[cmd_argc] = NULL;
+
+            redirect.type = REDIRECT_NONE;
+            redirect.filename = NULL;
 
             if(!validate_operators(&cmd_argc, cmd_argv, &redirect)){ continue; }
             if(argc == 0){ continue; }
@@ -85,8 +97,28 @@ int main(){
                 perror("fork");
                 exit(1);
             }
-            if(pid == 0){ execute_command(cmd_argc, cmd_argv, redirect, child_commands, commands_len); }
-            else{ waitpid(pid, NULL, 0); }
+            if(pid == 0){ 
+                if (i > 0) {
+                    dup2(pipes[i - 1][0], STDIN_FILENO);
+                }
+                if (i < num_cmds - 1) {
+                    dup2(pipes[i][1], STDOUT_FILENO);
+                }
+                for (int j = 0; j < num_cmds - 1; j++) {
+                    close(pipes[j][0]);
+                    close(pipes[j][1]);
+                }
+
+                execute_command(cmd_argc, cmd_argv, redirect, child_commands, commands_len); 
+                exit(1);
+            }
+        }
+        for (int i = 0; i < num_cmds - 1; i++) {
+            close(pipes[i][0]);
+            close(pipes[i][1]);
+        }
+        for (int i = 0; i < num_cmds; i++) {
+            wait(NULL);
         }
     }
 }
