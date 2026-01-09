@@ -40,12 +40,14 @@ int main(){
     int running = 1;
 
     while(running){
-        char input[1024];
         printf("myshell> $ ");
-        fgets(input, sizeof(input), stdin);
 
+        char input[1024];
         char *argv[10];
         int argc = 0;
+        char *cmd_argv[10];
+
+        fgets(input, sizeof(input), stdin);
         
         parse_input(input, &argc, argv);
 
@@ -59,11 +61,8 @@ int main(){
                 continue;
             }
         }
-        
-        char *cmd_argv[10];
 
         for(int i = 0; i < num_cmds; i++){
-
             int start = ranges[i].start;
             int end   = ranges[i].end;
             int cmd_argc = 0;
@@ -98,12 +97,9 @@ int main(){
                 exit(1);
             }
             if(pid == 0){ 
-                if (i > 0) {
-                    dup2(pipes[i - 1][0], STDIN_FILENO);
-                }
-                if (i < num_cmds - 1) {
-                    dup2(pipes[i][1], STDOUT_FILENO);
-                }
+                if (i > 0) { dup2(pipes[i - 1][0], STDIN_FILENO); }
+                if (i < num_cmds - 1) { dup2(pipes[i][1], STDOUT_FILENO); }
+                
                 for (int j = 0; j < num_cmds - 1; j++) {
                     close(pipes[j][0]);
                     close(pipes[j][1]);
@@ -117,8 +113,6 @@ int main(){
             close(pipes[i][0]);
             close(pipes[i][1]);
         }
-        for (int i = 0; i < num_cmds; i++) {
-            wait(NULL);
-        }
+        for (int i = 0; i < num_cmds; i++) { wait(NULL); }
     }
 }
